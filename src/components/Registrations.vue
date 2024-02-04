@@ -9,23 +9,29 @@
             <h4>{{ registration.name }}</h4>
             <span @click="unregister(registration)">(Unregister)</span>
             <div class="date">{{ registration.date }}</div>
+            <div>{{ registration.id }}</div>
         </div>
     </div>
 </template>
 
 <script>
-    export default {
-        props: ['registrations'],
+import { mapGetters } from "vuex";
+
+export default {
+        computed: {
+          ...mapGetters({ // install babel-preset-stage-2 to support spread operators on this vue cli version (add to .babelrc).
+            registrations: 'registrations',
+            total: 'totalRegistrations',
+          }),
+        },
         methods: {
             unregister(registration) {
-                this.$emit('userUnregistered', registration);
+                this.$store.commit({ // Just an alternative way.
+                  type: 'unregister',
+                  userId: registration.userId,
+                });
             }
         },
-        computed: {
-            total() {
-                return this.registrations.length;
-            }
-        }
     }
 </script>
 
